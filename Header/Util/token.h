@@ -10,7 +10,7 @@
 namespace Tag {
     int NUM = 256, ID = 257, REAL = 258;
 
-    //EQ, NE,
+    int EQ = 259, LE = 260, GE = 261;
 };
 
 class Token {
@@ -39,6 +39,8 @@ public:
     std::string lexeme;
 
     explicit Word(std::string &&s, int tag) : Token(tag), lexeme(s) {}
+
+    explicit Word(std::string &s, int tag) : Token(tag), lexeme(s) {}
 };
 
 #endif //TOYCOMPILER_TOKEN_H

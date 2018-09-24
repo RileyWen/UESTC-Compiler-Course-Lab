@@ -5,7 +5,10 @@
 #include <cctype>
 
 bool Lexer::readch(char c) {
-
+    readch();
+    if (peek != c) return false;
+    peek = ' ';
+    return true;
 }
 
 Token *Lexer::scan() {
@@ -15,8 +18,19 @@ Token *Lexer::scan() {
         else break;
     }
     switch (peek) {
-        case '&':
-            if ()
+        case:
+            '/'
+        case '=':
+            if (readch('=')) return static_cast<Token *>(new Word(std::string("=="), Tag::EQ));
+            else return new Token('=');
+        case '<':
+            if (readch('=')) return static_cast<Token *>(new Word(std::string("=="), Tag::LE));
+            else return new Token('<');
+        case '>':
+            if (readch('=')) return static_cast<Token *>(new Word(std::string("=="), Tag::GE));
+            else return new Token('>');
+        default:
+            break;
     }
     if (isdigit(peek)) {
         int v = 0;
