@@ -1,16 +1,15 @@
 //
 // Created by rileywen on 9/24/18.
 //
-
-#ifndef TOYCOMPILER_TOKEN_H
-#define TOYCOMPILER_TOKEN_H
-
 #include <string>
 
-namespace Tag {
-    int NUM = 256, ID = 257, REAL = 258;
+#ifndef TOYCOMPILER_TOKEN_H
+#define TOYCOMPILER_TOKEN_H 1
 
-    int EQ = 259, LE = 260, GE = 261;
+namespace Tag {
+    const static int NUM = 256, ID = 257, REAL = 258;
+
+    const static int EQ = 259, LE = 260, GE = 261, UNKNOWN = 262;
 };
 
 class Token {

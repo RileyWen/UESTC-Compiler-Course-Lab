@@ -1,7 +1,11 @@
 #include <iostream>
+#include <memory>
 #include "lexer.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    Lexer lexer;
+    while (!lexer.scan()) {
+
+    }
     return 0;
 }
