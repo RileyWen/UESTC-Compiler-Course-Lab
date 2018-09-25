@@ -4,8 +4,9 @@
 
 int main() {
     Lexer lexer;
-    while (!lexer.scan()) {
-
+    Token *tok;
+    while (tok = lexer.scan(), tok) {
+        std::cout << tok->tag << " ";
     }
     return 0;
 }

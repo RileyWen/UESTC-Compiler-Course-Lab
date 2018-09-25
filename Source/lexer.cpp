@@ -5,11 +5,13 @@
 #include <cctype>
 #include <string>
 
+int Lexer::line = 1;
+
 Token *Lexer::scan() {
-    for (;; readch()) {
+    for (readch();; readch()) {
         if (peek == ' ' || peek == '\t') continue;
         else if (peek == '\n') line++;
-        else if (peek == std::char_traits<char>::eof()) return nullptr;
+        else if (peek == '^') return nullptr;
         else break;
     }
     switch (peek) {
@@ -70,7 +72,7 @@ Token *Lexer::scan() {
         retract();
 
         auto got = words.find(b);
-        if (got != words.end()) {
+        if (got == words.end()) {
             words[b] = new Word(b, Tag::ID);
             return static_cast<Token *>(words[b]);
         } else
