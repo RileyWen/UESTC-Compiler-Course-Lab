@@ -11,7 +11,7 @@ Token *Lexer::scan() {
     for (readch();; readch()) {
         if (peek == ' ' || peek == '\t') continue;
         else if (peek == '\n') line++;
-        else if (peek == '^') return nullptr;
+        else if (peek == std::char_traits<char>::eof()) return nullptr;
         else break;
     }
     switch (peek) {
