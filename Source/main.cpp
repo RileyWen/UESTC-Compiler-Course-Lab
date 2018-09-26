@@ -12,10 +12,10 @@ int main() {
         }
         switch (token->tag) {
             case Tag::ID:
-                std::cout << "<ID, \"" << static_cast<Word *>(token)->lexeme << "\">\n";
+                std::cout << "<ID, \"" << static_cast<Word *>(token)->lexeme << "\">";
                 break;
             case Tag::UNKNOWN:
-                std::cout << "<UNKNOWN>\n";
+                std::cout << "<UNKNOWN>";
                 break;
             default:
                 break;

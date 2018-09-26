@@ -10,9 +10,27 @@ int Lexer::line = 1;
 Token *Lexer::scan() {
     for (readch();; readch()) {
         if (peek == ' ' || peek == '\t') continue;
-        else if (peek == '\n') line++;
         else if (peek == std::char_traits<char>::eof()) return nullptr;
-        else break;
+        else if (peek == '#') while (readch(), peek != '\n') {}
+        else if (peek == '\'') {
+            readch();
+            if (peek == '\'') {
+                if (nextch('\'')) {
+                    readch();
+                    while (true) {
+                        if (readch(), peek == '\'')
+                            if (readch(), peek == '\'')
+                                if (readch(), peek == '\'')
+                                    break;
+                    }
+                } else return static_cast<Token *>(new Word(std::string(""), Tag::STR));
+            } else {
+                std::string buffer;
+                while (readch(), peek != '\'')
+                    buffer += peek;
+                return static_cast<Token *>(new Word(std::move(buffer), Tag::STR));
+            }
+        } else break;
     }
     switch (peek) {
         case '+':

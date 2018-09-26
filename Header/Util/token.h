@@ -10,6 +10,8 @@ namespace Tag {
     const static int NUM = 256, ID = 257, REAL = 258;
 
     const static int EQ = 259, LE = 260, GE = 261, UNKNOWN = 262;
+
+    const static int STR = 263;
 };
 
 class Token {

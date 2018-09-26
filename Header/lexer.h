@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <exception>
 #include "Util/token.h"
 
 #ifndef TOYCOMPILER_LEXER_H
@@ -21,16 +22,30 @@ private:
 
     void reserve(Word *w) { words[w->lexeme] = w; }
 
-    void readch() { std::cin.get(peek); }
+    void readch() {
+        std::cin.get(peek);
+        if (peek == '\n') line++;
+    }
 
     char nextch() { return (char) std::cin.peek(); }
 
-    bool nextch(char c) { return (std::cin.peek() == c); };
+    bool nextch(char c) { return (std::cin.peek() == c); }
 
     void retract() { std::cin.unget(); }
 
     int ctoi(char c) { return (int) (c - '0'); }
 
+};
+
+struct LexerException : public std::exception {
+private:
+    std::string exp_msg;
+public:
+    explicit LexerException(std::string &&exp_msg) : exp_msg(exp_msg) {}
+
+    const char *what() const noexcept {
+        return exp_msg.c_str();
+    }
 };
 
 
