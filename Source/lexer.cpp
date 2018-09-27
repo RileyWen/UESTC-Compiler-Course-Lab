@@ -9,7 +9,7 @@ int Lexer::line = 1;
 
 Token *Lexer::scan() {
     for (readch();; readch()) {
-        if (peek == ' ' || peek == '\t') continue;
+        if (peek == ' ' || peek == '\t' || peek == '\n') continue;
         else if (peek == std::char_traits<char>::eof()) return nullptr;
         else if (peek == '#') while (readch(), peek != '\n') {}
         else if (peek == '\'') {
@@ -26,7 +26,27 @@ Token *Lexer::scan() {
                 } else return static_cast<Token *>(new Word(std::string(""), Tag::STR));
             } else {
                 std::string buffer;
+                buffer += peek;
                 while (readch(), peek != '\'')
+                    buffer += peek;
+                return static_cast<Token *>(new Word(std::move(buffer), Tag::STR));
+            }
+        } else if (peek == '\"') {
+            readch();
+            if (peek == '\"') {
+                if (nextch('\"')) {
+                    readch();
+                    while (true) {
+                        if (readch(), peek == '\"')
+                            if (readch(), peek == '\"')
+                                if (readch(), peek == '\"')
+                                    break;
+                    }
+                } else return static_cast<Token *>(new Word(std::string(""), Tag::STR));
+            } else {
+                std::string buffer;
+                buffer += peek;
+                while (readch(), peek != '\"')
                     buffer += peek;
                 return static_cast<Token *>(new Word(std::move(buffer), Tag::STR));
             }
@@ -35,9 +55,16 @@ Token *Lexer::scan() {
     switch (peek) {
         case '+':
         case '-':
+        case '*':
+        case '/':
         case '(':
         case ')':
         case ';':
+        case '.':
+        case ':':
+        case '[':
+        case ']':
+        case ',':
             return new Token(peek);
         case '=':
             if (nextch('=')) {
@@ -48,13 +75,19 @@ Token *Lexer::scan() {
         case '<':
             if (nextch('=')) {
                 readch();
-                return static_cast<Token *>(new Word(std::string("=="), Tag::LE));
+                return static_cast<Token *>(new Word(std::string("<="), Tag::LE));
             } else
                 return new Token('<');
         case '>':
             if (nextch('=')) {
                 readch();
-                return static_cast<Token *>(new Word(std::string("=="), Tag::GE));
+                return static_cast<Token *>(new Word(std::string(">="), Tag::GE));
+            } else
+                return new Token('>');
+        case '!':
+            if (nextch('=')) {
+                readch();
+                return static_cast<Token *>(new Word(std::string("!="), Tag::NE));
             } else
                 return new Token('>');
         default:
@@ -86,7 +119,7 @@ Token *Lexer::scan() {
         do {
             b += peek;
             readch();
-        } while (std::isalpha(peek) || std::isdigit(peek));
+        } while (std::isalpha(peek) || std::isdigit(peek) || peek == '_');
         retract();
 
         auto got = words.find(b);
@@ -95,6 +128,15 @@ Token *Lexer::scan() {
             return static_cast<Token *>(words[b]);
         } else
             return static_cast<Token *>(got->second);
-    } else
+    } else {
+        std::cout << "<Unknown:" << std::hex << (int) peek << ">";
         return new Token(Tag::UNKNOWN);
+    }
+}
+
+void Lexer::readch() {
+    std::cin.get(peek);
+    if (peek == '\n') line++;
+    if (std::cin.eof())
+        throw LexerException("EOF");
 }
