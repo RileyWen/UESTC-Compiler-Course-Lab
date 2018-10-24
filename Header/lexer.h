@@ -1,7 +1,7 @@
 //
 // Created by rileywen on 9/24/18.
 //
-
+#include <memory>
 #include <iostream>
 #include <unordered_map>
 #include <exception>
@@ -27,13 +27,13 @@ class Lexer {
 public:
     static int line;
 
-    Token *scan();
+    std::shared_ptr<Token> scan();
 
 private:
     char peek = ' ';
-    std::unordered_map<std::string, Word *> words;
+    std::unordered_map<std::string, std::shared_ptr<Word>> words;
 
-    void reserve(Word *w) { words[w->lexeme] = w; }
+    void reserve(std::shared_ptr<Word> w) { words[w->lexeme] = w; }
 
     void readch();
 
