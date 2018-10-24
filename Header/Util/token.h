@@ -19,6 +19,8 @@ public:
     int tag;
 
     explicit Token(int t) : tag(t) {}
+
+    virtual ~Token() = default;
 };
 
 class Num : public Token {

@@ -3,6 +3,7 @@
 #include <memory>
 #include "lexer.h"
 #include <unistd.h>
+#include <memory>
 
 int main() {
     std::ifstream in("/home/rileywen/Downloads/python.py");
@@ -12,7 +13,7 @@ int main() {
     }
 
     Lexer lexer;
-    Token *token;
+    std::shared_ptr<Token> token;
     try {
         while (token = lexer.scan(), token) {
             if (token->tag < 256) {
@@ -21,28 +22,28 @@ int main() {
             }
             switch (token->tag) {
                 case Tag::NUM:
-                    std::cout << "<NUM, \"" << static_cast<Num *>(token)->value << "\"> ";
+                    std::cout << "<NUM, \"" << std::dynamic_pointer_cast<Num>(token)->value << "\"> ";
                     break;
                 case Tag::REAL:
-                    std::cout << "<REAL, \"" << static_cast<Num *>(token)->value << "\"> ";
+                    std::cout << "<REAL, \"" << std::dynamic_pointer_cast<Real>(token)->value << "\"> ";
                     break;
                 case Tag::EQ:
-                    std::cout << "<EQ, \"" << static_cast<Word *>(token)->lexeme << "\"> ";
+                    std::cout << "<EQ, \"" << std::dynamic_pointer_cast<Word>(token)->lexeme << "\"> ";
                     break;
                 case Tag::LE:
-                    std::cout << "<LE, \"" << static_cast<Word *>(token)->lexeme << "\"> ";
+                    std::cout << "<LE, \"" << std::dynamic_pointer_cast<Word>(token)->lexeme << "\"> ";
                     break;
                 case Tag::ID:
-                    std::cout << "<ID, \"" << static_cast<Word *>(token)->lexeme << "\"> ";
+                    std::cout << "<ID, \"" << std::dynamic_pointer_cast<Word>(token)->lexeme << "\"> ";
                     break;
                 case Tag::GE:
-                    std::cout << "<GE, \"" << static_cast<Word *>(token)->lexeme << "\"> ";
+                    std::cout << "<GE, \"" << std::dynamic_pointer_cast<Word>(token)->lexeme << "\"> ";
                     break;
                 case Tag::NE:
-                    std::cout << "<NE, \"" << static_cast<Word *>(token)->lexeme << "\"> ";
+                    std::cout << "<NE, \"" << std::dynamic_pointer_cast<Word>(token)->lexeme << "\"> ";
                     break;
                 case Tag::STR:
-                    std::cout << "<STR, \"" << static_cast<Word *>(token)->lexeme << "\"> ";
+                    std::cout << "<STR, \"" << std::dynamic_pointer_cast<Word>(token)->lexeme << "\"> ";
                     break;
                 default:
                     break;

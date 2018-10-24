@@ -101,7 +101,7 @@ std::shared_ptr<Token> Lexer::scan() {
         } while (std::isdigit(peek));
         if (peek != '.') {
             retract();
-            return std::make_shared<Word>(Num(v));
+            return std::make_shared<Num>(v);
         }
         double x = v, d = 10;
         for (;;) {
@@ -113,7 +113,7 @@ std::shared_ptr<Token> Lexer::scan() {
             x += (double) ctoi(peek) / d;
             d *= 10;
         }
-        return std::make_shared<Word>(Real(x));
+        return std::make_shared<Real>(x);
     } else if (std::isalpha(peek)) {
         std::string b;
         do {
