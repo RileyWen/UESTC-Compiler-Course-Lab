@@ -7,6 +7,9 @@
 
 #include <string>
 #include <memory>
+#include <iostream>
+
+using std::cout;
 
 template<typename T>
 using ptr = std::shared_ptr<T>;

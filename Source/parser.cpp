@@ -38,9 +38,12 @@ ptr<Stmt> Parser::external_declaration(int level) {
     decl_or_stmt_ = decl_or_stmt(level + 1, type);
     ptr<Stmt> block;
     ptr<Decls> decl_list;
-    if (block = ptr_to<Stmt>(decl_or_stmt_))
-        return new_ptr<Function>(level, type, declarator_, block);
-    else if (decl_list = ptr_to<Decls>(decl_or_stmt_)) {
+    if (block = ptr_to<Stmt>(decl_or_stmt_)) {
+        if (auto funcdecl = ptr_to<FunctionDecl>(declarator_))
+            return new_ptr<Function>(level, type, funcdecl, block);
+        else
+            error("Block must follow a function declaration");
+    } else if (decl_list = ptr_to<Decls>(decl_or_stmt_)) {
         decl_list->decl_list.push_front(declarator_);
         return new_ptr<VarDeclList>(level, type, std::move(decl_list));
     } else
@@ -303,11 +306,10 @@ ptr<Expr> Parser::mul_expr(int level) {
         return new_ptr<Unary>(level, tok, primary_expr(level + 1));
     } else {
         ptr<Expr> x = primary_expr(level + 1);
-        ptr<Word> mul_tok;
         while (look->tag == '%' || look->tag == '*' || look->tag == '*') {
-            mul_tok = ptr_to<Word>(look);
+            ptr<Token> tok = look;
             move();
-            x = new_ptr<Binary>(level, mul_tok, x, primary_expr(level + 1));
+            x = new_ptr<Binary>(level, tok, x, primary_expr(level + 1));
         }
         return x;
     }
@@ -327,7 +329,7 @@ ptr<Expr> Parser::primary_expr(int level) {
                     } else {    // primary_expr -> ID '(' expr_list ')'
                         ptr<ExprList> expr_list_ = expr_list(level + 1);
                         match(')');
-                        return new_ptr<FuncCall>(level, id);
+                        return new_ptr<FuncCall>(level, id, expr_list_);
                     }
                 }
                 case '=': {  // primary_expr -> ID '=' expr

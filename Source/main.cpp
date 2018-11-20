@@ -24,6 +24,7 @@ int main() {
     ptr<Parser> parser = new_ptr<Parser>(lexer);
     try {
         auto program_stmt = parser->program(0);
+        program_stmt->print(0);
         /*ptr<Token> tok;
         while (true) {
             tok = lexer->scan();
