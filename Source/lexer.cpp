@@ -5,9 +5,73 @@
 #include <cctype>
 #include <string>
 
-int Lexer::line = 1;
+extern "C" {
+#include "lex.yy.c"
+}
 
-std::shared_ptr<Token> Lexer::scan() {
+FlexAdapter::FlexAdapter(const char *path) {
+    yyin = fopen(path, "r");
+}
+
+
+/*enum yytokentype{
+    TYPE    = 257,  EOL     = 258,  STRING  = 259,  KEYWORD = 260,
+    REL     = 261,  ID      = 262,  FLOAT   = 263,  ASSIGN  = 264,
+    INT     = 265,  UNKNOWN = 266,  OP      = 268
+};*/
+ptr<Token> FlexAdapter::scan() {
+    int token;
+    while (token = yylex(), token == EOL)
+        line++;
+    if (token == 0)
+        return new_ptr<Token>(Tag::EOF_);
+    else if (token < 256) {
+        printf("Char->\t%c\n", token);
+        return new_ptr<Token>(token);
+    } else {
+        switch (token) {
+            case TYPE:
+                printf("TYPE->\t%s\n", yylval.strptr);
+                return new_ptr<Type>(yylval.strptr, Tag::TYPE);
+                break;
+            case VOID:
+                printf("VOID->\t%s\n", yylval.strptr);
+                return new_ptr<Word>(yylval.strptr, Tag::VOID);
+            case STRING:
+                printf("STRING->\t%s\n", yylval.strptr);
+                return new_ptr<Word>(yylval.strptr, Tag::STRING);
+                break;
+            case KEYWORD:
+                printf("KEYWORD->\t%s\n", yylval.strptr);
+                return new_ptr<Word>(yylval.strptr, Tag::KEYWORD);
+                break;
+            case REL:
+                printf("REL->\t%s\n", yylval.strptr);
+                return new_ptr<Word>(yylval.strptr, Tag::CMP);
+                break;
+            case ID:
+                printf("ID->\t%s\n", yylval.strptr);
+                return new_ptr<Word>(yylval.strptr, Tag::ID);
+                break;
+            case ASSIGN:
+                printf("ASSIGN->\t%s\n", yylval.strptr);
+                return new_ptr<Word>(yylval.strptr, Tag::ASSIGN);
+                break;
+            case INT:
+                printf("INT->\t%d\n", yylval.intval);
+                return new_ptr<Num>(yylval.intval);
+                break;
+            case OP:
+                printf("OP->\t%d\n", yylval.intval);
+                return new_ptr<Word>(yylval.strptr, Tag::OP);
+            default:
+                throw LexerException("UNKNOWN->\t" + std::string(yylval.strptr) + "\n");
+//              return new_ptr<Token>(Tag::UNKNOWN);
+        }
+    }
+}
+
+std::shared_ptr<Token> MyLexer::scan() {
     for (readch();; readch()) {
         if (peek == ' ' || peek == '\t' || peek == '\n') continue;
         else if (peek == std::char_traits<char>::eof()) return nullptr;
@@ -23,13 +87,13 @@ std::shared_ptr<Token> Lexer::scan() {
                                 if (readch(), peek == '\'')
                                     break;
                     }
-                } else return std::make_shared<Word>(std::string(""), Tag::STR);
+                } else return std::make_shared<Word>(std::string(""), Tag::STRING);
             } else {
                 std::string buffer;
                 buffer += peek;
                 while (readch(), peek != '\'')
                     buffer += peek;
-                return std::make_shared<Word>(std::move(buffer), Tag::STR);
+                return std::make_shared<Word>(std::move(buffer), Tag::STRING);
             }
         } else if (peek == '\"') {
             readch();
@@ -42,13 +106,13 @@ std::shared_ptr<Token> Lexer::scan() {
                                 if (readch(), peek == '\"')
                                     break;
                     }
-                } else return std::make_shared<Word>(std::string(""), Tag::STR);
+                } else return std::make_shared<Word>(std::string(""), Tag::STRING);
             } else {
                 std::string buffer;
                 buffer += peek;
                 while (readch(), peek != '\"')
                     buffer += peek;
-                return std::make_shared<Word>(std::move(buffer), Tag::STR);
+                return std::make_shared<Word>(std::move(buffer), Tag::STRING);
             }
         } else break;
     }
@@ -69,25 +133,25 @@ std::shared_ptr<Token> Lexer::scan() {
         case '=':
             if (nextch('=')) {
                 readch();
-                return std::make_shared<Word>(std::string("=="), Tag::EQ);
+                return std::make_shared<Word>(std::string("=="), Tag::CMP);
             } else
                 return std::make_shared<Token>('=');
         case '<':
             if (nextch('=')) {
                 readch();
-                return std::make_shared<Word>(std::string("<="), Tag::LE);
+                return std::make_shared<Word>(std::string("<="), Tag::CMP);
             } else
                 return std::make_shared<Token>('<');
         case '>':
             if (nextch('=')) {
                 readch();
-                return std::make_shared<Word>(std::string(">="), Tag::GE);
+                return std::make_shared<Word>(std::string(">="), Tag::CMP);
             } else
                 return std::make_shared<Token>('>');
         case '!':
             if (nextch('=')) {
                 readch();
-                return std::make_shared<Word>(std::string("!="), Tag::NE);
+                return std::make_shared<Word>(std::string("!="), Tag::CMP);
             } else
                 return std::make_shared<Token>('>');
         default:
@@ -134,7 +198,7 @@ std::shared_ptr<Token> Lexer::scan() {
     }
 }
 
-void Lexer::readch() {
+void MyLexer::readch() {
     std::cin.get(peek);
     if (peek == '\n') line++;
     if (std::cin.eof())

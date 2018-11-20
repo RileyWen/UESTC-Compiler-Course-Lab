@@ -1,17 +1,18 @@
 //
 // Created by rileywen on 9/24/18.
 //
+
+#ifndef TOYCOMPILER_LEXER_H
+#define TOYCOMPILER_LEXER_H 1
+
 #include <memory>
 #include <iostream>
 #include <unordered_map>
 #include <exception>
 #include "Util/token.h"
 
-#ifndef TOYCOMPILER_LEXER_H
-#define TOYCOMPILER_LEXER_H 1
 
-
-struct LexerException : public std::exception {
+class LexerException : public std::exception {
 private:
     std::string exp_msg;
 public:
@@ -22,12 +23,25 @@ public:
     }
 };
 
-
 class Lexer {
 public:
-    static int line;
+    int line;
 
-    std::shared_ptr<Token> scan();
+    virtual ptr<Token> scan() = 0;
+
+    Lexer() : line(0) {};
+};
+
+class FlexAdapter : public Lexer {
+public:
+    virtual ptr<Token> scan();
+
+    FlexAdapter(const char *path);
+};
+
+class MyLexer : public Lexer {
+public:
+    ptr<Token> scan() override;
 
 private:
     char peek = ' ';
@@ -46,5 +60,6 @@ private:
     int ctoi(char c) { return (int) (c - '0'); }
 
 };
+
 
 #endif //TOYCOMPILER_LEXER_H
