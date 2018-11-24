@@ -4,9 +4,7 @@
 
 #include <Util/AstNode.h>
 
-#include "Util/AstNode.h"
-
-ptr<Stmt> Stmt::Null = new_ptr<Stmt>(0);
+ptr<Stmt> Stmt::Null = new_ptr<Stmt>();
 
 void Function::print(int level) {
     printws(level);
@@ -140,4 +138,91 @@ void FuncCall::print(int level) {
     } else {
         cout << "No Args\n";
     }
+}
+
+void ExprStmt::print(int level) {
+    printws(level);
+    cout << "Expr Stmt:\n";
+    expr->print(level + 1);
+}
+
+void VarDeclList::print(int level) {
+    printws(level);
+    cout << "Type " << type->lexeme << ":\n";
+    for (auto &&i : decl_list->decl_list)
+        i->print(level + 1);
+}
+
+void IdList::print(int level) {
+    for (auto id : ids) {
+        printws(level);
+        cout << "Identifier<" << id->tok << ">\n";
+    }
+}
+
+void IdDecl::print(int level) {
+    printws(level);
+    cout << "Identifier Declaration:\n";
+    printws(level + 1);
+    cout << "Identifier Name: " << ptr_to<Word>(id_name->tok)->lexeme << "\n";
+    printws(level + 1);
+    if (default_val) {
+        cout << "Default Value Expr:\n";
+        default_val->print(level + 2);
+    } else {
+        cout << "Default Value is not specified\n";
+    }
+}
+
+void ArrayDecl::print(int level) {
+    printws(level);
+    cout << "Array Name: " << ptr_to<Word>(id->tok)->lexeme << "\n";
+    printws(level);
+    if (size) {
+        cout << "Size Expression:\n";
+        size->print(level + 1);
+    } else
+        cout << "Size Expression is not specified\n";
+    printws(level);
+    if (constlist) {
+        cout << "Constant List:\n";
+        for (auto &&i : constlist->constlist)
+            i->print(level + 1);
+    } else
+        cout << "Constant List is not specified";
+}
+
+void Parameter::print(int level) {
+    printws(level);
+    cout << "Type: " << type->lexeme << "  Name: "
+         << ptr_to<Word>(id->tok)->lexeme << "\n";
+}
+
+void Set::print(int level) {
+    printws(level);
+    cout << "Set an Element:\n";
+    printws(level + 1);
+    cout << "Id Ref: " << ptr_to<Word>(id->tok)->lexeme << "\n";
+    printws(level + 1);
+    cout << "Val Expr:\n";
+    expr->print(level + 2);
+}
+
+void Access::print(int level) {
+    printws(level);
+    cout << "Array Element:\n";
+    printws(level + 1);
+    cout << "Array Name: " << ptr_to<Word>(array->tok)->lexeme << "\n";
+    printws(level + 1);
+    cout << "Index Expr:\n";
+    index->print(level + 2);
+}
+
+void SetElem::print(int level) {
+    printws(level);
+    cout << "Set an Element:\n";
+    access->print(level + 1);
+    printws(level + 1);
+    cout << "Val Expr:\n";
+    expr->print(level + 2);
 }

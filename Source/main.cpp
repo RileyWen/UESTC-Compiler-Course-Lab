@@ -1,9 +1,6 @@
 #include <iostream>
-#include <fstream>
 #include <memory>
 #include "lexer.h"
-#include <unistd.h>
-#include <memory>
 #include "parser.h"
 
 void printtok(ptr<Token> tok) {
@@ -23,7 +20,7 @@ int main() {
     ptr<Lexer> lexer = new_ptr<FlexAdapter>("/home/rileywen/Downloads/lab2/test.c");
     ptr<Parser> parser = new_ptr<Parser>(lexer);
     try {
-        auto program_stmt = parser->program(0);
+        auto program_stmt = parser->program();
         program_stmt->print(0);
         /*ptr<Token> tok;
         while (true) {

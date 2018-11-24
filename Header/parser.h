@@ -37,46 +37,46 @@ private:
     template<typename... T>
     ptr<Token> match(T... Args);
 
-    ptr<Stmt> external_declaration(int level);
+    ptr<Stmt> external_declaration();
 
-    ptr<Decls> declarator_list(int level, ptr<Type> type);
+    ptr<Decls> declarator_list(ptr<Type> type);
 
-    ptr<ConstantList> constant_list(int level);
+    ptr<ConstantList> constant_list();
 
-    ptr<Decl> declarator(int level, ptr<Type> type);
+    ptr<Decl> declarator(ptr<Type> type);
 
-    ptr<Node> decl_or_stmt(int level, ptr<Type> type);
+    ptr<Node> decl_or_stmt(ptr<Type> type);
 
-    ptr<ParameterList> parameter_list(int level);
+    ptr<ParameterList> parameter_list();
 
-    ptr<Stmt> statement(int level);
+    ptr<Stmt> statement();
 
-    ptr<StmtList> statement_list(int level);
+    ptr<StmtList> statement_list();
 
-    ptr<Expr> expr(int level);
+    ptr<Expr> expr();
 
-    ptr<Expr> add_expr(int level);
+    ptr<Expr> add_expr();
 
-    ptr<Expr> mul_expr(int level);
+    ptr<Expr> mul_expr();
 
-    ptr<Expr> primary_expr(int level);
+    ptr<Expr> primary_expr();
 
-    ptr<ExprList> expr_list(int level);
+    ptr<ExprList> expr_list();
 
-    ptr<IdList> id_list(int level);
+    ptr<IdList> id_list();
 
-    ptr<While> while_stmt(int level);
+    ptr<While> while_stmt();
 
-    ptr<Return> return_stmt(int level);
+    ptr<Return> return_stmt();
 
-    ptr<Scan> scan_stmt(int level);
+    ptr<Scan> scan_stmt();
 
-    ptr<Print> print_stmt(int level);
+    ptr<Print> print_stmt();
 
 public:
     Parser(ptr<Lexer> l) : Lex(l) { move(); };
 
-    ptr<Stmt> program(int level);
+    ptr<Stmt> program();
 };
 
 #endif //TOYCOMPILER_PARSER_H
