@@ -133,7 +133,7 @@ yield					{ printf ("<Keyword,\t \"%s\">\n", yytext); }
 
 int main(int argc, char **argv)
 {
-	yyin = fopen( "/home/rileywen/Downloads/lab1/python.py", "r" );
+	yyin = fopen( "../test-input/python.py", "r" );
 	yylex();
 }
 

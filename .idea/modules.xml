@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ToyCompiler.iml" filepath="$PROJECT_DIR$/.idea/ToyCompiler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/UESTC-Compiler-Course-Lab.iml" filepath="$PROJECT_DIR$/.idea/UESTC-Compiler-Course-Lab.iml" />
     </modules>
   </component>
 </project>

@@ -17,7 +17,7 @@ void printtok(ptr<Token> tok) {
 }
 
 int main() {
-    ptr<Lexer> lexer = new_ptr<FlexAdapter>("/home/rileywen/Downloads/lab2/test.c");
+    ptr<Lexer> lexer = new_ptr<FlexAdapter>("../test-input/test.c");
     ptr<Parser> parser = new_ptr<Parser>(lexer);
     try {
         auto program_stmt = parser->program();

@@ -1,6 +1,8 @@
 #include <iostream>
 #include "driver.hpp"
 
+// run with argv[1] = '../test-input/test.c'
+
 int main(int argc, char *argv[]) {
     int res = 0;
     driver drv;
