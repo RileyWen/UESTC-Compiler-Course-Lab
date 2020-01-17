@@ -4,7 +4,6 @@ project(RD-Parser)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
-
 FIND_PACKAGE(FLEX REQUIRED)
 
 set(FLEX_SOURCE ${CMAKE_SOURCE_DIR}/Source/lex.yy.l)
