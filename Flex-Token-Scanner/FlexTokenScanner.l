@@ -4,6 +4,7 @@
         char *string_buf_ptr;
 %}
 
+%option noyywrap
 
 %x single_quote_str
 %x double_quote_str
@@ -130,7 +131,7 @@ yield					{ printf ("<Keyword,\t \"%s\">\n", yytext); }
 .		{ printf("<\"%s\">\n", yytext); }
 %%
 
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 	yyin = fopen( "/home/rileywen/Downloads/lab1/python.py", "r" );
 	yylex();
