@@ -18,6 +18,7 @@ IF (FLEX_FOUND)
 ENDIF ()
 
 add_executable(ToyCompiler Source/main.cpp Header/lexer.h Header/Util/token.h Source/lexer.cpp
-        Source/Util/token.cpp Header/Util/symbols.h Source/Util/symbols.cpp Header/parser.h Header/Util/AstNode.h Source/parser.cpp Source/Util/AstNode.cpp)
+        Source/Util/token.cpp Header/Util/symbols.h Source/Util/symbols.cpp Header/parser.h Header/Util/AstNode.h
+        Source/parser.cpp Source/Util/AstNode.cpp Header/myparser.hh Header/location.hh)
 include_directories(Header)
 

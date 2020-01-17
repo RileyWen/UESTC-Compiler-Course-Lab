@@ -11,6 +11,7 @@
 #include <string>
 #include <memory>
 #include <list>
+#include <myparser.hh>
 #include "token.h"
 
 struct Node {
@@ -72,7 +73,7 @@ struct Access : Expr {
     virtual void print(int level);
 
     Access(ptr<Id> array, ptr<Expr> index)
-            : Expr(new_ptr<Word>("[]", Tag::INDEX)) {}
+            : Expr(new_ptr<Word>("[]", Tag::INDEX)), array(array) {}
 };
 
 struct SetElem : Expr {
