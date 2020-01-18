@@ -1,4 +1,4 @@
-# About This Toy Compiler
+# About This Toy Compiler Front End
 
 ## Structure
 
@@ -10,7 +10,7 @@ this compiler front end refers to the Java-version compiler front end in
 
 ## Grammar
 
-This toy compiler follows the grammar below, 
+This toy compiler front end follows the grammar below, 
 which is slightly modified from the Lab handout for programming convenience.
 
 ```

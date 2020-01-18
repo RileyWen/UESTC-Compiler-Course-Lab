@@ -1,5 +1,5 @@
-# This Makefile is designed to be simple and readable.  It does not
-# aim at portability.  It requires GNU Make.
+# This Makefile is UESLESS Now!!!
+# Should use CMakeList.txt to compile!
 
 BISON = bison
 CXX = g++
